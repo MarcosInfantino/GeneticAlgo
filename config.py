@@ -9,7 +9,10 @@ class Config:
         #   "RANDOM": cruza binomial aleatoria
         #   "SINGLE_POINT": cruza simple
         #   "MASK": cruza binomial con máscara doble
-        self.CROSSOVER_FUNCION = "MASK"
+        RANDOM_str = "RANDOM"
+        SINGLE_POINT_str = "SINGLE_POINT"
+        MASK_str = "MASK"
+        self.CROSSOVER_FUNCION = SINGLE_POINT_str
         # MASKS
         self.MASK_FIRST_CHILD = "XXYYXYXXXYYYXYXYYYXX"
         self.MASK_SECOND_CHILD = "YYXXYXYYYXXXYXYXXXYY"
