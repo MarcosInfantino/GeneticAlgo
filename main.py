@@ -7,6 +7,9 @@ from config import POPULATION_SIZE
 from config import GENERATIONAL_LEAP
 from config import NUMBER_OF_GENERATIONS
 from config import MUTATION_PROBABILITY
+from config import CROSSOVER_FUNCION
+from config import MASK_FIRST_CHILD
+from config import MASK_SECOND_CHILD
 
 
 class Individual:
@@ -79,12 +82,59 @@ def single_point_crossover(individual1, individual2):
     return [child1, child2]
 
 
+def get_random_child(individual1, individual2):
+    child_chromosome = []
+    for _i in range(len(individual1.chromosome)):
+        if random() <= 0.5:
+            child_chromosome.append(individual1.chromosome[_i])
+        else:
+            child_chromosome.append(individual2.chromosome[_i])
+    return Individual(child_chromosome)
+
+
+def random_crossover(individual1, individual2):
+    return [get_random_child(individual1, individual2), get_random_child(individual1, individual2)]
+
+
+def raise_invalid_mask_exception():
+    raise Exception("Invalid mask")
+
+
+def get_child_from_mask(individual1, individual2, mask):
+    if len(individual1.chromosome) != len(mask):
+        raise_invalid_mask_exception()
+    child_chromosome = []
+    for _i in range(len(mask)):
+        if mask[_i] == 'X':
+            child_chromosome.append(individual1.chromosome[_i])
+        elif mask[_i] == 'Y':
+            child_chromosome.append(individual2.chromosome[_i])
+        else:
+            raise_invalid_mask_exception()
+    return Individual(child_chromosome)
+
+
+def mask_crossover(individual1, individual2):
+    return [get_child_from_mask(individual1, individual2, MASK_FIRST_CHILD),
+            get_child_from_mask(individual1, individual2, MASK_SECOND_CHILD)]
+
+
+def crossover(individual1, individual2):
+    match CROSSOVER_FUNCION:
+        case "RANDOM":
+            return random_crossover(individual1, individual2)
+        case "MASK":
+            return mask_crossover(individual1, individual2)
+        case _:
+            return single_point_crossover(individual1, individual2)
+
+
 def get_population_after_crossover(old_population):
     gen_leap_length = round((len(old_population) * GENERATIONAL_LEAP) / 2 - 0.1) * 2
     parents = old_population[0:gen_leap_length]
     crossed_population = []
     for pi in range(0, len(parents), 2):
-        children = single_point_crossover(old_population[pi], old_population[pi + 1])
+        children = crossover(old_population[pi], old_population[pi + 1])
         crossed_population.append(children[0])
         crossed_population.append(children[1])
     return crossed_population + old_population[gen_leap_length::]

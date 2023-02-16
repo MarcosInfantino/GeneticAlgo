@@ -13,7 +13,8 @@ products = [Product('Refrigerator A', 0.751, 999.90), Product('Cell phone', 0.00
             Product("Refrigerator C", 0.870, 1199.89), Product("Notebook B", 0.498, 1999.90),
             Product("Notebook C", 0.527, 3999.00), Product("Notebook D", 0.597, 2999.00),
             Product("Notebook E", 0.300, 1999.00), Product("Notebook F", 0.127, 999.00),
-            Product("Notebook G", 0.27, 99.00), Product("Cell C", 0.97, 199.00)]
+            Product("Notebook G", 0.27, 99.00), Product("Cell C", 0.97, 199.00),
+            Product("Notebook H", 0.27, 69.00)]
 
 product_prices = []
 for prod in products:
