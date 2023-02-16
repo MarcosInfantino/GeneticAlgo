@@ -1,4 +1,5 @@
 from random import random
+from random import randint
 import plotly.express as px
 from commons import product_prices
 from commons import product_spaces
@@ -58,12 +59,57 @@ def select_individual_by_roulette(_population, fitness_function_sum):
             _index += 1
 
 
-def get_population_after_selection(old_population):
+def select_population_by_roulette(old_population):
     new_population = []
     fitness_function_sum = total_sum_fitness_function(old_population)
     for individual_index in range(len(old_population)):
         new_population.append(select_individual_by_roulette(old_population, fitness_function_sum))
     return new_population
+
+
+def get_random_individual_not_already_selected(_population, already_selected_individual_indexes):
+    _index = randint(0, len(_population) - 1)
+    while _index in already_selected_individual_indexes:
+        _index = randint(0, len(_population) - 1)
+    already_selected_individual_indexes.append(_index)
+    return _population[_index]
+
+
+def competition_result(individual1, individual2):
+    if individual1.fitness() >= individual2.fitness():
+        return individual1
+    else:
+        return individual2
+
+
+def select_individual_by_tournament(_population):
+    if CONFIG.POPULATION_SIZE % 2 != 0:
+        raise Exception("Cannot perform tournament if population size is not an even number")
+    if len(_population) == 1:
+        return _population[0]
+    else:
+        new_population = []
+        already_selected = []
+        for _i in range(len(_population) // 2):
+            individual1 = get_random_individual_not_already_selected(_population, already_selected)
+            individual2 = get_random_individual_not_already_selected(_population, already_selected)
+            new_population.append(competition_result(individual1, individual2))
+        return select_individual_by_tournament(new_population)
+
+
+def select_population_by_tournament(old_population):
+    new_population = []
+    for individual_index in range(len(old_population)):
+        new_population.append(select_individual_by_tournament(old_population))
+    return new_population
+
+
+def get_population_after_selection(old_population):
+    match CONFIG.SELECTION_FUNCTION:
+        case "TOURNAMENT":
+            return select_population_by_tournament(old_population)
+        case _:
+            return select_population_by_roulette(old_population)
 
 
 def single_point_crossover(individual1, individual2):
@@ -177,7 +223,6 @@ for gen_number in range(CONFIG.NUMBER_OF_GENERATIONS):
     population = get_population_after_crossover(population)
     population = get_population_after_mutation(population)
     print("Best individual of generation " + str(gen_number + 1) + " : ")
-    print(len(population))
     best = get_best_individual(population)
     best.print()
     solutions.append(best.fitness())
