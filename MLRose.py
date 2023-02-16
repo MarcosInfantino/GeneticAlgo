@@ -1,6 +1,6 @@
 from commons import product_prices
 from commons import product_spaces
-from config import SPACE_LIMIT
+from config import CONFIG
 from commons import products
 import six
 import sys
@@ -15,7 +15,7 @@ def fitness_function(chromosome):
         if chromosome[gen_index] == 1:
             score += product_prices[gen_index]
             sum_spaces += product_spaces[gen_index]
-    if sum_spaces > SPACE_LIMIT:
+    if sum_spaces > CONFIG.SPACE_LIMIT:
         score = 1
     return score
 

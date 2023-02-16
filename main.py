@@ -2,14 +2,7 @@ from random import random
 import plotly.express as px
 from commons import product_prices
 from commons import product_spaces
-from config import SPACE_LIMIT
-from config import POPULATION_SIZE
-from config import GENERATIONAL_LEAP
-from config import NUMBER_OF_GENERATIONS
-from config import MUTATION_PROBABILITY
-from config import CROSSOVER_FUNCION
-from config import MASK_FIRST_CHILD
-from config import MASK_SECOND_CHILD
+from config import CONFIG
 
 
 class Individual:
@@ -31,7 +24,7 @@ class Individual:
             if self.chromosome[gen_index] == 1:
                 score += product_prices[gen_index]
                 sum_spaces += product_spaces[gen_index]
-        if sum_spaces > SPACE_LIMIT:
+        if sum_spaces > CONFIG.SPACE_LIMIT:
             score = 1
         return score
 
@@ -41,7 +34,7 @@ class Individual:
 
 def get_initial_population():
     _population = []
-    for i in range(POPULATION_SIZE):
+    for i in range(CONFIG.POPULATION_SIZE):
         _population.append(Individual())
     return _population
 
@@ -115,12 +108,12 @@ def get_child_from_mask(individual1, individual2, mask):
 
 
 def mask_crossover(individual1, individual2):
-    return [get_child_from_mask(individual1, individual2, MASK_FIRST_CHILD),
-            get_child_from_mask(individual1, individual2, MASK_SECOND_CHILD)]
+    return [get_child_from_mask(individual1, individual2, CONFIG.MASK_FIRST_CHILD),
+            get_child_from_mask(individual1, individual2, CONFIG.MASK_SECOND_CHILD)]
 
 
 def crossover(individual1, individual2):
-    match CROSSOVER_FUNCION:
+    match CONFIG.CROSSOVER_FUNCION:
         case "RANDOM":
             return random_crossover(individual1, individual2)
         case "MASK":
@@ -130,7 +123,7 @@ def crossover(individual1, individual2):
 
 
 def get_population_after_crossover(old_population):
-    gen_leap_length = round((len(old_population) * GENERATIONAL_LEAP) / 2 - 0.1) * 2
+    gen_leap_length = round((len(old_population) * CONFIG.GENERATIONAL_LEAP) / 2 - 0.1) * 2
     parents = old_population[0:gen_leap_length]
     crossed_population = []
     for pi in range(0, len(parents), 2):
@@ -157,7 +150,7 @@ def get_mutation_position(_population):
 
 def get_population_after_mutation(_population):
     mutation_probability = random()
-    if mutation_probability <= MUTATION_PROBABILITY:
+    if mutation_probability <= CONFIG.MUTATION_PROBABILITY:
         mutation_pos = len(_population)
 
         while mutation_pos == len(_population):
@@ -179,7 +172,7 @@ def get_population_after_mutation(_population):
 
 population = get_initial_population()
 solutions = []
-for gen_number in range(NUMBER_OF_GENERATIONS):
+for gen_number in range(CONFIG.NUMBER_OF_GENERATIONS):
     population = get_population_after_selection(population)
     population = get_population_after_crossover(population)
     population = get_population_after_mutation(population)
@@ -190,5 +183,5 @@ for gen_number in range(NUMBER_OF_GENERATIONS):
     solutions.append(best.fitness())
     print("Fitness function value: " + str(best.fitness()))
 
-figure = px.line(x=range(0, NUMBER_OF_GENERATIONS), y=solutions, title='Genetic algorithm results')
+figure = px.line(x=range(0, CONFIG.NUMBER_OF_GENERATIONS), y=solutions, title='Genetic algorithm results')
 figure.show()

@@ -1,14 +1,18 @@
-SPACE_LIMIT = 5
-POPULATION_SIZE = 100
-GENERATIONAL_LEAP = 0.7
-NUMBER_OF_GENERATIONS = 200
-MUTATION_PROBABILITY = 0.1
-#CROSSOVER_FUNCTION VALUES:
-#   "RANDOM": cruza binomial aleatoria
-#   "SINGLE_POINT": cruza simple
-#   "MASK": cruza binomial con máscara doble
-CROSSOVER_FUNCION = "MASK"
-#MASKS
-MASK_FIRST_CHILD = "XXYYXYXXXYYYXYXYYYXX"
-MASK_SECOND_CHILD = "YYXXYXYYYXXXYXYXXXYY"
+class Config:
+    def __init__(self):
+        self.SPACE_LIMIT = 5
+        self.POPULATION_SIZE = 100
+        self.GENERATIONAL_LEAP = 0.7
+        self.NUMBER_OF_GENERATIONS = 200
+        self.MUTATION_PROBABILITY = 0.1
+        # CROSSOVER_FUNCTION VALUES:
+        #   "RANDOM": cruza binomial aleatoria
+        #   "SINGLE_POINT": cruza simple
+        #   "MASK": cruza binomial con máscara doble
+        self.CROSSOVER_FUNCION = "MASK"
+        # MASKS
+        self.MASK_FIRST_CHILD = "XXYYXYXXXYYYXYXYYYXX"
+        self.MASK_SECOND_CHILD = "YYXXYXYYYXXXYXYXXXYY"
 
+
+CONFIG = Config()
