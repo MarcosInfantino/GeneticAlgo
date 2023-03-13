@@ -159,7 +159,7 @@ def mask_crossover(individual1, individual2):
 
 
 def crossover(individual1, individual2):
-    match CONFIG.CROSSOVER_FUNCION:
+    match CONFIG.CROSSOVER_FUNCTION:
         case "RANDOM":
             return random_crossover(individual1, individual2)
         case "MASK":
@@ -218,15 +218,23 @@ def get_population_after_mutation(_population):
 
 population = get_initial_population()
 solutions = []
+
 for gen_number in range(CONFIG.NUMBER_OF_GENERATIONS):
     population = get_population_after_selection(population)
     population = get_population_after_crossover(population)
     population = get_population_after_mutation(population)
-    print("Best individual of generation " + str(gen_number + 1) + " : ")
+    print("Best individual of generation ",
+          str(gen_number + 1), " : ")
     best = get_best_individual(population)
     best.print()
     solutions.append(best.fitness())
-    print("Fitness function value: " + str(best.fitness()))
+    print("Fitness function value: ", str(best.fitness()))
 
-figure = px.line(x=range(0, CONFIG.NUMBER_OF_GENERATIONS), y=solutions, title='Genetic algorithm results')
+graph_title = "Best score: " + str(get_best_individual(population).fitness()) \
+              + " - Generational leap: " + str(CONFIG.GENERATIONAL_LEAP) \
+              + " - Mutation probability: " + str(CONFIG.MUTATION_PROBABILITY) \
+              + " - Crossover function: " + CONFIG.CROSSOVER_FUNCTION \
+              + " - Selection function: " + CONFIG.SELECTION_FUNCTION
+
+figure = px.line(x=range(0, CONFIG.NUMBER_OF_GENERATIONS), y=solutions, title=graph_title)
 figure.show()
