@@ -215,22 +215,28 @@ def get_population_after_mutation(_population):
 
 # ALGORITMO
 # ---------GENERACIÓN DE LA POBLACIÓN INCIAL
-
-population = get_initial_population()
 solutions = []
 
-for gen_number in range(CONFIG.NUMBER_OF_GENERATIONS):
-    population = get_population_after_selection(population)
-    population = get_population_after_crossover(population)
-    population = get_population_after_mutation(population)
-    print("Best individual of generation ",
-          str(gen_number + 1), " : ")
-    best = get_best_individual(population)
-    best.print()
-    solutions.append(best.fitness())
-    print("Fitness function value: ", str(best.fitness()))
 
-graph_title = "Best score: " + str(get_best_individual(population).fitness()) \
+def execute_ga_from_scratch():
+    best = -1
+    population = get_initial_population()
+    for gen_number in range(CONFIG.NUMBER_OF_GENERATIONS):
+        population = get_population_after_selection(population)
+        population = get_population_after_crossover(population)
+        population = get_population_after_mutation(population)
+        print("Best individual of generation ",
+              str(gen_number + 1), " : ")
+        best = get_best_individual(population)
+        best.print()
+        solutions.append(best.fitness())
+        print("Fitness function value: ", str(best.fitness()))
+    return best.fitness()
+
+
+best_score = execute_ga_from_scratch()
+
+graph_title = "Best score: " + str(best_score) \
               + " - Generational leap: " + str(CONFIG.GENERATIONAL_LEAP) \
               + " - Mutation probability: " + str(CONFIG.MUTATION_PROBABILITY) \
               + " - Crossover function: " + CONFIG.CROSSOVER_FUNCTION \
