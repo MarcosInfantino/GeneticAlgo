@@ -169,7 +169,7 @@ def crossover(individual1, individual2):
 
 
 def get_population_after_crossover(old_population):
-    gen_leap_length = round((len(old_population) * CONFIG.GENERATIONAL_LEAP) / 2 - 0.1) * 2
+    gen_leap_length = (round((len(old_population) * CONFIG.GENERATIONAL_LEAP))//2) * 2
     parents = old_population[0:gen_leap_length]
     crossed_population = []
     for pi in range(0, len(parents), 2):
