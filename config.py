@@ -19,7 +19,7 @@ class Config:
         #SELECTION FUNCTION
         TOURNAMENT = "TOURNAMENT"
         ROULETTE = "ROULETTE"
-        self.SELECTION_FUNCTION = TOURNAMENT
+        self.SELECTION_FUNCTION = ROULETTE
 
 
 CONFIG = Config()

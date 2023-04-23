@@ -3,6 +3,7 @@ from random import randint
 import plotly.express as px
 from commons import product_prices
 from commons import product_spaces
+from commons import products
 from config import CONFIG
 
 
@@ -10,7 +11,7 @@ class Individual:
     def __init__(self, chromosome=[]):
         if not chromosome:
             self.chromosome = []
-            for i in range(len(product_prices)):
+            for i in range(len(products)):
                 if random() < 0.5:
                     self.chromosome.append(0)
                 else:
@@ -219,18 +220,20 @@ solutions = []
 
 
 def execute_ga_from_scratch():
-    best = -1
     population = get_initial_population()
+    best = get_best_individual(population)
     for gen_number in range(CONFIG.NUMBER_OF_GENERATIONS):
         population = get_population_after_selection(population)
         population = get_population_after_crossover(population)
         population = get_population_after_mutation(population)
         print("Best individual of generation ",
               str(gen_number + 1), " : ")
-        best = get_best_individual(population)
-        best.print()
-        solutions.append(best.fitness())
-        print("Fitness function value: ", str(best.fitness()))
+        gen_best = get_best_individual(population)
+        solutions.append(gen_best.fitness())
+        gen_best.print()
+        print("Fitness function value: ", str(gen_best.fitness()))
+        if gen_best.fitness() > best.fitness():
+            best = gen_best
     return best.fitness()
 
 
